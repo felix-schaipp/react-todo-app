@@ -2,7 +2,7 @@ import { render } from 'react-dom'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App'
-import { Todos, Money, Groceries, Test } from './routes'
+import { Todos, Money, Groceries, Test, Settings } from './routes'
 
 const rootElement = document.getElementById('root')
 render(
@@ -13,6 +13,7 @@ render(
         <Route path="groceries" element={<Money />} />
         <Route path="money" element={<Groceries />} />
         <Route path="test" element={<Test />} />
+        <Route path="settings" element={<Settings />} />
         <Route
           path="*"
           element={

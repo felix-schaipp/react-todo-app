@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Todo } from '../types'
-import { TodoList } from '../components/TodoList'
+import { TodoList } from '../components'
 import { v4 as uuid } from 'uuid'
 import './Todos.css'
 
@@ -9,6 +9,7 @@ const LOCAL_STORAGE_TODO_LIST_KEY = 'todoApp.todoList'
 export function Todos(): JSX.Element {
   const todoInput = useRef<HTMLInputElement>(null)
   const [todoList, setTodos] = useState([])
+  const [currentTodoInput, setCurrentTodoInput] = useState('')
 
   useEffect(() => {
     const storedTodoList = JSON.parse(
@@ -29,18 +30,22 @@ export function Todos(): JSX.Element {
     setTodos(newTodos)
   }
 
+  function resetInputField(): void {
+    setCurrentTodoInput('')
+    todoInput.current.value = ''
+  }
+
   function handleAddTodo(): void {
-    const name = todoInput?.current?.value
-    if (!name) return
+    if (currentTodoInput.length === 0) return
 
     const newTodo: Todo = {
       id: uuid(),
       checked: false,
-      name,
+      name: currentTodoInput,
     }
-    todoInput.current.value = null
     const newTodos = [...todoList, newTodo]
     setTodos(newTodos)
+    resetInputField()
   }
 
   function handleKeyDown(event): void {
@@ -54,7 +59,12 @@ export function Todos(): JSX.Element {
         toggleTodo={toggleTodo}
       />
       <div className="add-todos">
-        <input type="text" ref={todoInput} onKeyPress={handleKeyDown} />
+        <input
+          type="text"
+          ref={todoInput}
+          onKeyPress={handleKeyDown}
+          onChange={(e) => setCurrentTodoInput(e.target.value)}
+        />
         <button onClick={handleAddTodo} className="add-todo">
           Add todo
         </button>
